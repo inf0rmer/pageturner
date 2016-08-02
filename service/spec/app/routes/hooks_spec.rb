@@ -42,7 +42,7 @@ describe Routes::Hooks do
       end
       let(:params) do
         {
-          ref: "refs/heads/master",
+          ref: "refs/heads/#{ENV['MONITORED_BRANCH']}",
           repository: {
             full_name: repo_name
           }
@@ -50,11 +50,11 @@ describe Routes::Hooks do
       end
       let(:repo_name) { "octocat/Hello-World" }
       let(:event)     { "push" }
-      let(:repo)      { instance_double("GitRepository") }
-      let(:builder)   { instance_double("Worker::Builder") }
+      let(:repo)      { instance_double("Models::GitRepository") }
+      let(:builder)   { instance_double("Builder") }
 
       before do
-        allow(GitRepository).to receive(:new).with(repo_name) { repo }
+        allow(Models::GitRepository).to receive(:new).with(repo_name) { repo }
 
         allow(Builder).to receive(:new).with(repo) { builder }
         allow(builder).to receive(:build!)
@@ -72,7 +72,7 @@ describe Routes::Hooks do
         expect(last_response.status).to eq(201)
       end
 
-      context "When the event refers to a branch that is not \"master\"" do
+      context "When the event refers to a branch that is not 'ENV[\"MONITORED_BRANCH\"]'" do
         let(:params) { { ref: "refs/heads/some_branch" } }
 
         it "responds with a 200" do

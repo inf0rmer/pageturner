@@ -12,11 +12,11 @@ module Routes
     end
 
     before "/hooks", method: :post, provides: :json do
-      halt(200) if params["ref"] != "refs/heads/master"
+      halt(200) if params["ref"] != "refs/heads/#{ENV['MONITORED_BRANCH']}"
     end
 
     post "/hooks" do
-      GitRepository.new(repo_name).tap do |repo|
+      Models::GitRepository.new(repo_name).tap do |repo|
         Builder.new(repo).build!
       end
 
