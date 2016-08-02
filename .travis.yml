@@ -14,11 +14,6 @@ addons:
 
 before_script:
   - cd service
-
-before_install:
-  - gem update bundler
-
-install:
   - bundle install
 
 script: bundle exec rspec
