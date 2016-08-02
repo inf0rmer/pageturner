@@ -23,12 +23,12 @@ RUN mkdir /home/app/builder
 
 # Run Bundle in a cache efficient way
 WORKDIR /tmp
-COPY service/Gemfile /tmp/
-COPY service/Gemfile.lock /tmp/
+ADD Gemfile /tmp/
+ADD Gemfile.lock /tmp/
 RUN bundle install
 
 # Add our app
-COPY service /home/app/builder
+ADD . /home/app/builder
 RUN chown -R app:app /home/app
 
 # Clean up when done.

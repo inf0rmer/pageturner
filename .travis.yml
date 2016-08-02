@@ -12,8 +12,4 @@ addons:
   code_climate:
     repo_token: bc61d2976e27ba108e3a65d4cc72d33d0f03fd63f76b52f6eb8c8e7e1992d619
 
-before_script:
-  - cd service
-  - bundle install
-
 script: bundle exec rspec

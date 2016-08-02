@@ -1,1 +1,8 @@
 .env
+.codeclimate.yml
+.travis.yml
+docker-compose.yml
+Dockerfile
+Guardfile
+LICENSE
+README.md
