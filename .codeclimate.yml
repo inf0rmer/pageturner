@@ -1,0 +1,30 @@
+engines:
+
+  # https://docs.codeclimate.com/v1.0/docs/brakeman
+  brakeman:
+    enabled: true
+
+  # https://docs.codeclimate.com/v1.0/docs/bundler-audit
+  bundler-audit:
+    enabled: true
+
+  # https://docs.codeclimate.com/v1.0/docs/duplication
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+
+  # https://docs.codeclimate.com/v1.0/docs/rubocop
+  # rubocop:
+  #   enabled: true
+
+exclude_paths:
+- config/**/*
+- deploy/**/*
+- spec/**/*
+- vendor/**/*
+
+ratings:
+  paths:
+  - app/**/*

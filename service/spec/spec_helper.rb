@@ -1,4 +1,9 @@
-require "simplecov"
+if ENV["CODECLIMATE_REPO_TOKEN"]
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+else
+  require "simplecov"
+end
 
 ENV["APP_ENV"]          = "test"
 ENV["MONITORED_BRANCH"] = "monitored_branch"
