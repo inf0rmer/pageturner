@@ -1,6 +1,7 @@
 module Models
   class GitRepository
-    GIT_REMOTE_URL = "git@github.com"
+    GIT_REMOTE_URL = "https://github.com".freeze
+    REPOS_PATH     = "/tmp/repos".freeze
 
     attr_reader :name
 
@@ -21,20 +22,18 @@ module Models
       @repo = Git.open(repository_path)
     end
 
+    def repository_path
+      "#{REPOS_PATH}/#{name}"
+    end
+
     private
 
     def repository_url
-      "#{GIT_REMOTE_URL}:#{name}.git"
-    end
-
-    def repository_path
-      "/tmp/repos/#{name}"
+      "#{GIT_REMOTE_URL}/#{name}.git"
     end
 
     def clone
-      path = File.dirname(repository_path)
-
-      Git.clone(repository_url, name, path: path)
+      Git.clone(repository_url, name, path: REPOS_PATH)
     end
   end
 end

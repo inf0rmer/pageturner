@@ -16,6 +16,7 @@ RUN rm /etc/nginx/sites-enabled/default
 
 # Create virtual host
 ADD docker/vhost.conf /etc/nginx/sites-enabled/builder.conf
+ADD docker/env.conf /etc/nginx/main.d/app-env.conf
 
 # Prepare folders
 RUN mkdir /home/app/builder
@@ -27,7 +28,7 @@ COPY service/Gemfile.lock /tmp/
 RUN bundle install
 
 # Add our app
-COPY app /home/app/builder
+COPY service /home/app/builder
 RUN chown -R app:app /home/app
 
 # Clean up when done.

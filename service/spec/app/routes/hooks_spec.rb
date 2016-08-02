@@ -51,16 +51,16 @@ describe Routes::Hooks do
       let(:repo_name) { "octocat/Hello-World" }
       let(:event)     { "push" }
       let(:repo)      { instance_double("Models::GitRepository") }
-      let(:builder)   { instance_double("Builder") }
+      let(:builder)   { instance_double("Workers::Builder") }
 
       before do
         allow(Models::GitRepository).to receive(:new).with(repo_name) { repo }
 
-        allow(Builder).to receive(:new).with(repo) { builder }
+        allow(Workers::Builder).to receive(:new).with(repo) { builder }
         allow(builder).to receive(:build!)
       end
 
-      it "calls Builder#build! with the given repo" do
+      it "calls Workers::Builder#build! with the given repo" do
         subject
 
         expect(builder).to have_received(:build!)

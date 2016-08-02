@@ -17,7 +17,7 @@ module Routes
 
     post "/hooks" do
       Models::GitRepository.new(repo_name).tap do |repo|
-        Builder.new(repo).build!
+        Workers::Builder.new(repo).build!
       end
 
       [201, {}, {}]

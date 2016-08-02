@@ -7,6 +7,12 @@ describe Models::GitRepository do
     allow(Git).to receive(:clone)
   end
 
+  describe "#repository_path" do
+    subject { super().repository_path }
+
+    it { is_expected.to eq("/tmp/repos/#{repo_name}") }
+  end
+
   describe "#repo" do
     subject { super().repo }
 
@@ -19,7 +25,7 @@ describe Models::GitRepository do
     end
 
     context "when folder does not exist" do
-      let(:path) { "/tmp/repos/#{File.dirname(repo_name)}" }
+      let(:path) { "/tmp/repos" }
 
       before do
         allow(Dir).to receive(:exists?) { false }
@@ -29,7 +35,7 @@ describe Models::GitRepository do
         subject
 
         expect(Git).to have_received(:clone)
-          .with("git@github.com:#{repo_name}.git", repo_name, path: path)
+          .with("https://github.com/#{repo_name}.git", repo_name, path: path)
       end
     end
 
