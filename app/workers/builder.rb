@@ -9,19 +9,18 @@ module Workers
     def build!
       @repo.update
 
-
-      pid = fork
-
-      if pid == nil
-        Bundler.with_clean_env do
-          Dir.chdir(@repo.repository_path) do
-            Kernel.exec("bundle install && bundle exec jekyll build -d /sites/#{@repo.name}")
-          end
-        end
+      fork do
+        Bundler.with_clean_env { install_and_deploy! }
       end
 
-      wait pid
+    end
 
+    private
+
+    def install_and_deploy!
+      Dir.chdir(@repo.repository_path) do
+        Kernel.exec("bundle install && bundle exec jekyll build -d /sites/#{@repo.name}")
+      end
     end
   end
 end

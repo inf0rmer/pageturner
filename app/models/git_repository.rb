@@ -8,8 +8,8 @@ module Models
     def initialize(name)
       @name = name
 
-      repo.config('user.name', 'Pageturner Builder')
-      repo.config('user.email', 'builder@pageturner.io')
+      repo.config("user.name", ENV["GIT_USER_NAME"])
+      repo.config("user.email", ENV["GIT_USER_EMAIL"])
     end
 
     def update
