@@ -1,5 +1,7 @@
 module Workers
   class Builder
+    include Process
+
     def initialize(repo)
       @repo = repo
     end
@@ -7,10 +9,19 @@ module Workers
     def build!
       @repo.update
 
-      Dir.chdir(@repo.repository_path) {
-        Kernel.exec(["bundle", "install"])
-        Kernel.exec(["bundle", "exec", "jekyll", "build"])
-      }
+
+      pid = fork
+
+      if pid == nil
+        Bundler.with_clean_env do
+          Dir.chdir(@repo.repository_path) do
+            Kernel.exec("bundle install && bundle exec jekyll build -d /sites/#{@repo.name}")
+          end
+        end
+      end
+
+      wait pid
+
     end
   end
 end
