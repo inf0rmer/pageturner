@@ -5,7 +5,17 @@ builder:
   env_file: .env
   links:
     - redis
+  volumes:
+    - sites:/sites
 
 redis:
   image: redis:3.2
 
+sites:
+  image: nginx:stable
+  ports:
+    - 8090:80
+  volumes_from:
+    - builder
+  volumes:
+    - sites:/usr/share/nginx/html:ro
