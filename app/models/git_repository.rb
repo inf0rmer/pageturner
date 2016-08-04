@@ -7,12 +7,14 @@ module Models
 
     def initialize(name)
       @name = name
+
+      repo.config("user.name", ENV["GIT_USER_NAME"])
+      repo.config("user.email", ENV["GIT_USER_EMAIL"])
     end
 
     def update
       repo.fetch
       repo.checkout(ENV["MONITORED_BRANCH"])
-      repo.pull
     end
 
     def repo

@@ -1,0 +1,7 @@
+development:
+  redis:
+    url: <%= (ENV["REDIS_PORT"] || "").sub("tcp://", "redis://") + "/0" %>
+
+test:
+  redis:
+    url: <%= "redis://localhost:6379/15" %>

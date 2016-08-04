@@ -22,6 +22,7 @@ gem 'rack-cors'
 
 # App specifics
 gem 'git'
+gem 'sidekiq'
 
 group :development, :test do
   gem 'guard'

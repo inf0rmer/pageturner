@@ -1,5 +1,5 @@
 require_relative 'boot'
-require 'app'
+require "app"
 
 # health check used by load balancers
 map("/pulse") { run -> _ { [200, {}, []] } }

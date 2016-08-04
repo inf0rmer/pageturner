@@ -2,6 +2,7 @@ require "app/models/git_repository"
 require "app/workers/builder"
 require "app/routes/api_base"
 require "app/routes/hooks"
+require "config/initializers/sidekiq"
 
 class App < Sinatra::Base
 

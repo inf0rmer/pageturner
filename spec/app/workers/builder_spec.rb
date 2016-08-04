@@ -1,16 +1,23 @@
 describe Workers::Builder do
-  subject { described_class.new(repo) }
-
+  let(:builder)   { described_class.new(repo) }
   let(:repo)      { instance_double("Models::GitRepository").as_null_object }
   let(:repo_name) { "octocat/Hello-World" }
 
-  describe "#build!" do
+  before :each do
+    allow(repo).to receive(:name).and_return(repo_name)
+  end
 
-    subject { super().build! }
+  describe "#build!" do
+    subject { builder.build! }
 
     before :each do
       allow(repo).to receive(:clone)
       allow(repo).to receive(:update)
+
+      allow(builder).to receive(:fork) do |&block|
+        block.call
+      end
+
       allow(Dir).to receive(:chdir) { |&block| block.call }
       allow(Kernel).to receive(:exec)
     end
@@ -31,13 +38,9 @@ describe Workers::Builder do
       subject
 
       expect(Kernel).to have_received(:exec)
-        .with(["bundle", "install"])
-        .ordered
-
-      expect(Kernel).to have_received(:exec)
-        .with(["bundle", "exec", "jekyll", "build"])
-        .ordered
+        .with("bundle install && bundle exec jekyll build -d /sites/#{repo_name}")
     end
+
   end
 
 end

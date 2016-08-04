@@ -6,6 +6,9 @@ rvm:
 cache:
   - bundler
 
+services:
+  - redis
+
 sudo: false
 
 addons:
