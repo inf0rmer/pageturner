@@ -1,21 +1,29 @@
-builder:
-  build: .
-  ports:
-    - 8080:80
-  env_file: .env
-  links:
-    - redis
-  volumes:
-    - sites:/sites
+version: "2"
 
-redis:
-  image: redis:3.2
+services:
+  builder:
+    build: .
+    ports:
+      - 8080:80
+    links:
+      - redis
+    volumes:
+      - sites:/sites
+    environment:
+      - WEBHOOK_SECRET
+      - MONITORED_BRANCH
 
-sites:
-  image: nginx:stable
-  ports:
-    - 8090:80
-  volumes_from:
-    - builder
-  volumes:
-    - sites:/usr/share/nginx/html:ro
+  redis:
+    image: redis:3.2
+
+  sites:
+    image: nginx:stable
+    ports:
+      - 8090:80
+    volumes_from:
+      - builder
+    volumes:
+      - sites:/usr/share/nginx/html:ro
+
+volumes:
+  sites:
