@@ -7,12 +7,14 @@ module Models
 
     def initialize(name)
       @name = name
+
+      repo.config('user.name', 'Pageturner Builder')
+      repo.config('user.email', 'builder@pageturner.io')
     end
 
     def update
       repo.fetch
       repo.checkout(ENV["MONITORED_BRANCH"])
-      repo.pull
     end
 
     def repo
