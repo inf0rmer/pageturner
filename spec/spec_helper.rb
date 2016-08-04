@@ -11,12 +11,14 @@ ENV["MONITORED_BRANCH"] = "monitored_branch"
 require_relative "../boot"
 require "app"
 require "rack/test"
+require "sidekiq/testing"
 
 Dir[APP_ROOT / "spec" / "support" / "**" / "*.rb"].each { |f| require f }
 
 module RSpecMixin
 
   include Rack::Test::Methods
+  Sidekiq::Testing.inline!
 
   def app
     App

@@ -12,6 +12,7 @@ GEM
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
+    connection_pool (2.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     dotenv (2.1.1)
@@ -67,6 +68,7 @@ GEM
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
+    redis (3.3.1)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -82,6 +84,11 @@ GEM
     rspec-support (3.5.0)
     ruby_dep (1.3.1)
     shellany (0.0.1)
+    sidekiq (4.1.4)
+      concurrent-ruby (~> 1.0)
+      connection_pool (~> 2.2, >= 2.2.0)
+      redis (~> 3.2, >= 3.2.1)
+      sinatra (>= 1.4.7)
     simplecov (0.12.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -124,6 +131,7 @@ DEPENDENCIES
   rack-parser
   rack-test
   rspec
+  sidekiq
   simplecov
   sinatra
   sinatra-contrib

@@ -3,3 +3,9 @@ builder:
   ports:
     - 8080:80
   env_file: .env
+  links:
+    - redis
+
+redis:
+  image: redis:3.2
+

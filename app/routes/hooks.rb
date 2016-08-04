@@ -1,3 +1,5 @@
+require "jobs/builder"
+
 module Routes
   class Hooks < ApiBase
 
@@ -16,9 +18,7 @@ module Routes
     end
 
     post "/hooks" do
-      Models::GitRepository.new(repo_name).tap do |repo|
-        Workers::Builder.new(repo).build!
-      end
+      Builder.perform_async(repo_name)
 
       [201, {}, {}]
     end
