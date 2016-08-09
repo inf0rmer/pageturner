@@ -5,8 +5,7 @@ else
   require "simplecov"
 end
 
-ENV["APP_ENV"]          = "test"
-ENV["MONITORED_BRANCH"] = "monitored_branch"
+ENV["APP_ENV"] = "test"
 
 require_relative "../boot"
 require "app"
