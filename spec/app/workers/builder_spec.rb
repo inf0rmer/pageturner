@@ -29,11 +29,19 @@ describe Workers::Builder do
         pid
       end
 
+      allow(builder).to receive(:before_build)
+
       allow(Dir).to receive(:chdir) { |&block| block.call }
       allow(Kernel).to receive(:exec)
       allow(Process).to receive(:wait).with(pid)
 
       allow(S3Uploader).to receive(:upload)
+    end
+
+    it "calls #before_build" do
+      subject
+
+      expect(builder).to have_received(:before_build)
     end
 
     it "updates the repo" do
@@ -72,4 +80,21 @@ describe Workers::Builder do
 
   end
 
+  describe "#before_build" do
+    subject { builder.before_build }
+
+    let(:channel) { Bunny.new.start.channel }
+    let(:fanout)  { channel.fanout("builds", durable: true) }
+    let(:queue)   { channel.queue("a_service") }
+
+    before :each do
+      queue.bind(fanout, routing_key: "build:started")
+    end
+
+    it "publishes a 'build:started' event" do
+      subject
+
+      expect(queue.message_count).to eq(1)
+    end
+  end
 end

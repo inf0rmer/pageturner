@@ -7,9 +7,14 @@ services:
       - 80
     links:
       - redis
+      - rabbitmq
     env_file:
       - .env
     environment:
       APP_ENV: development
+
   redis:
     image: redis:3.2
+
+  rabbitmq:
+    image: rabbitmq:3.6

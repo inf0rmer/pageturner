@@ -5,6 +5,8 @@ module Workers
     end
 
     def build!
+      before_build
+
       @repo.update
 
       pid = fork do
@@ -14,7 +16,13 @@ module Workers
       Process.wait pid
 
       deploy!
+    end
 
+    def before_build
+      channel  = Bunny.new.start.channel
+      exchange = channel.fanout("builds", durable: true)
+
+      exchange.publish("Ping", routing_key: "build:started")
     end
 
     private
