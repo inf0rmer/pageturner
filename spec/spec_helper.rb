@@ -8,12 +8,12 @@ end
 ENV["APP_ENV"] = "test"
 
 require_relative "../boot"
-require "app"
 require "rack/test"
 require "sidekiq/testing"
-require "bunny-mock"
 
 Dir[APP_ROOT / "spec" / "support" / "**" / "*.rb"].each { |f| require f }
+
+require "app"
 
 module RSpecMixin
 
@@ -29,8 +29,4 @@ end
 RSpec.configure do |config|
   config.include RSpecMixin
   config.include JsonSpec::Helpers
-
-  config.before :each do
-    stub_const("Bunny", BunnyMock)
-  end
 end

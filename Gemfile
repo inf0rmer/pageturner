@@ -35,6 +35,7 @@ end
 group :test do
   gem "rack-test"
   gem "rspec"
+  gem "rspec-its"
   gem "json_spec"
   gem "timecop"
   gem "bunny-mock"

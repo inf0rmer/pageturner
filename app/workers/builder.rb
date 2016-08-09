@@ -1,5 +1,9 @@
+require "app/workers/builder/events"
+
 module Workers
   class Builder
+    include Events
+
     def initialize(repo)
       @repo = repo
     end
@@ -16,13 +20,16 @@ module Workers
       Process.wait pid
 
       deploy!
+
+      after_build
     end
 
     def before_build
-      channel  = Bunny.new.start.channel
-      exchange = channel.fanout("builds", durable: true)
+      publish(build_started_event)
+    end
 
-      exchange.publish("Ping", routing_key: "build:started")
+    def after_build
+      publish(build_finished_event)
     end
 
     private
@@ -38,18 +45,30 @@ module Workers
 
     def install!(options = {})
       Dir.chdir(@repo.repository_path) do
-        Kernel.exec("bundle install && bundle exec jekyll build -d /sites/#{@repo.name}")
+        Kernel.exec("bundle install && bundle exec jekyll build -d #{build_location}")
       end
+    end
+
+    def deploy_location
+      @deploy_location ||= {
+        host:   "s3",
+        bucket: build_options[:bucket],
+        object: "#{@repo.name}/#{Time.now.to_i}"
+      }
+    end
+
+    def build_location
+      "/sites/#{@repo.name}"
     end
 
     def deploy!
       S3Uploader.upload(
-        "/sites/#{@repo.name}",
+        build_location,
         build_options[:bucket],
         {
           s3_key:          build_options[:s3_key],
           s3_secret:       build_options[:s3_secret],
-          destination_dir: "#{@repo.name}/#{Time.now.to_i}",
+          destination_dir: deploy_location[:object],
           region:          build_options[:region]
         }
       )
