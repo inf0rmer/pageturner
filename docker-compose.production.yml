@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+  app:
+    image: inf0rmer/pageturner:latest
+    cpu_shares: 100
+    mem_limit: 268435456
+    ports:
+      - 80
+    environment:
+      WEBHOOK_SECRET:
+      MONITORED_BRANCH:
+      S3_BUCKET_NAME:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_KEY:
+      AWS_REGION:
