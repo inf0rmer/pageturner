@@ -5,3 +5,7 @@ development:
 test:
   redis:
     url: redis://localhost:6379/15
+
+production:
+  redis:
+    url: <%= ENV["REDIS_URL"] %>
