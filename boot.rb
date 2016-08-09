@@ -17,7 +17,7 @@ ENV["GIT_USER_EMAIL"] = ENV["GIT_USER_EMAIL"].presence || "builder@pageturner.io
 Bundler.require(:default, ENV["APP_ENV"])
 
 # Load dotenv
-Dotenv.load(".env", ".env.#{ENV['APP_ENV']}")
+Dotenv.load(".env.#{ENV['APP_ENV']}", ".env")
 
 # Define APP_ROOT
 APP_ROOT = Pathname.new(File.expand_path("..", __FILE__))
