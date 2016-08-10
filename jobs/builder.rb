@@ -1,5 +1,5 @@
-require "app/models/git_repository"
-require "app/workers/builder"
+require_relative "../boot"
+require "app"
 
 class Builder
   include Sidekiq::Worker

@@ -1,11 +1,17 @@
 development:
   redis:
     url: redis://redis:6379/15
+  rabbitmq:
+    url: <%= ENV["RABBITMQ_URL"] %>
 
 test:
   redis:
     url: redis://localhost:6379/15
+  rabbitmq:
+    url: amqp://localhost:5672
 
 production:
   redis:
     url: <%= ENV["REDIS_URL"] %>
+  rabbitmq:
+    url: <%= ENV["RABBITMQ_URL"] %>

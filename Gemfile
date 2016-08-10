@@ -24,6 +24,7 @@ gem "rack-cors"
 gem "git"
 gem "sidekiq"
 gem "s3_uploader"
+gem "bunny"
 
 group :development, :test do
   gem "guard"
@@ -34,8 +35,10 @@ end
 group :test do
   gem "rack-test"
   gem "rspec"
+  gem "rspec-its"
   gem "json_spec"
   gem "timecop"
+  gem "bunny-mock"
 
   # code coverage
   gem "simplecov",                 require: false
