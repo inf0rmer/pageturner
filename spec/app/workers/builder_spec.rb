@@ -138,7 +138,8 @@ describe Workers::Builder do
         builder.after_build
       end
 
-      its([:name])       { is_expected.to eq("build:finished") }
+      its([:name])                 { is_expected.to eq("build:finished") }
+      its([:id])                   { is_expected.to be_a(String) }
       its([:meta, :created_at])    { is_expected.to eq(Time.now.iso8601(9)) }
       its([:meta, :cid])           { is_expected.to be_a(String) }
       its([:meta, :version])       { is_expected.to eq(1) }

@@ -10,6 +10,7 @@ module Events
     {
       message: {
         name: BUILD_STARTED_EVENT,
+        id:   SecureRandom.hex,
         meta: metadata,
         payload: {
           repository: @repo.name
@@ -25,6 +26,7 @@ module Events
     {
       message: {
         name: BUILD_FINISHED_EVENT,
+        id:   SecureRandom.hex,
         meta: metadata,
         payload: {
           repository: @repo.name,
