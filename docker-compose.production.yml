@@ -2,7 +2,7 @@ version: "2"
 
 services:
   app:
-    image: inf0rmer/pageturner:latest
+    image: pageturner/builder:latest
     cpu_shares: 100
     mem_limit: 268435456
     ports:
