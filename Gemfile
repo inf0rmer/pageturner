@@ -15,6 +15,7 @@ gem "json"
 gem "activesupport"
 gem "i18n"
 gem "dotenv"
+gem "rollbar"
 
 # API utils
 gem "rack-parser"
