@@ -21,6 +21,7 @@ ADD docker/env.conf /etc/nginx/main.d/app-env.conf
 # Prepare folders
 RUN mkdir /home/app/builder
 RUN mkdir /etc/service/sidekiq
+RUN mkdir /sites
 
 # Run Bundle in a cache efficient way
 WORKDIR /tmp
