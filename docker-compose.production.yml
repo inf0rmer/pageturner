@@ -4,7 +4,6 @@ services:
   app:
     image: pageturner/builder:latest
     cpu_shares: 100
-    mem_limit: 268435456
     ports:
       - 80:80
     environment:
