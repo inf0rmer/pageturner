@@ -20,7 +20,7 @@ env:
 
 addons:
   code_climate:
-    repo_token: bc61d2976e27ba108e3a65d4cc72d33d0f03fd63f76b52f6eb8c8e7e1992d619
+    repo_token: 85fafcd211737d9c6751b2239b0e26840eb6459b80b15aec7deb83ab9b32c1a8
 
 script: bundle exec rspec
 
