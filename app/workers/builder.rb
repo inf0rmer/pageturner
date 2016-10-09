@@ -1,8 +1,5 @@
-require "app/workers/builder/events"
-
 module Workers
   class Builder
-    include Events
 
     def initialize(repo)
       @repo = repo
@@ -25,11 +22,16 @@ module Workers
     end
 
     def before_build
-      publish(build_started_event)
+      Hivent::Signal.new("build:started").emit({
+        repository: @repo.name
+      }, version: 1)
     end
 
     def after_build
-      publish(build_finished_event)
+      Hivent::Signal.new("build:finished").emit({
+        repository: @repo.name,
+        location:   deploy_location
+      }, version: 1)
     end
 
     private

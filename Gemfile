@@ -4,28 +4,19 @@ source "https://rubygems.org"
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
-gem "sinatra"
-# sinatra-contrib messes with the global namespace,
-# require: false lets Rake tasks run properly
-gem "sinatra-contrib", require: false
-gem "sinatra-initializers"
-
 # common gems
 gem "json"
 gem "activesupport"
-gem "i18n"
 gem "dotenv"
 gem "rollbar"
 
-# API utils
-gem "rack-parser"
-gem "rack-cors"
-
 # App specifics
 gem "git"
-gem "sidekiq"
 gem "s3_uploader"
-gem "bunny"
+gem "hivent"
+
+# Deployment
+gem "foreman"
 
 group :development, :test do
   gem "guard"
@@ -34,12 +25,10 @@ group :development, :test do
 end
 
 group :test do
-  gem "rack-test"
   gem "rspec"
   gem "rspec-its"
   gem "json_spec"
   gem "timecop"
-  gem "bunny-mock"
 
   # code coverage
   gem "simplecov",                 require: false
