@@ -1,7 +1,8 @@
 describe Workers::Builder do
-  let(:builder)   { described_class.new(repo) }
-  let(:repo)      { instance_double("Models::GitRepository").as_null_object }
-  let(:repo_name) { "octocat/Hello-World" }
+  let(:builder)               { described_class.new(repo, build_requested_event) }
+  let(:repo)                  { instance_double("Models::GitRepository").as_null_object }
+  let(:repo_name)             { "octocat/Hello-World" }
+  let(:build_requested_event) { { meta: { cid: SecureRandom.hex } } }
 
   before :all do
     Timecop.freeze
@@ -83,68 +84,38 @@ describe Workers::Builder do
   describe "#before_build" do
     subject { builder.before_build }
 
-    let(:exchange) { $rabbitmq_channel.topic("builds", durable: true) }
-    let(:queue)    { $rabbitmq_channel.queue("a_service") }
-
-    before :each do
-      queue.bind(exchange, routing_key: "build:started")
-    end
-
     it "publishes a 'build:started' event" do
-      expect { subject }.to change { queue.message_count }.by(1)
+      expect { subject }.to emit("build:started").with(
+        repository: repo_name
+      )
     end
 
-    describe "the event payload" do
-      subject { JSON.parse(queue.pop.last).with_indifferent_access }
-
-      before :each do
-        builder.before_build
-      end
-
-      its([:name])                 { is_expected.to eq("build:started") }
-      its([:meta, :created_at])    { is_expected.to eq(Time.now.iso8601(9)) }
-      its([:meta, :cid])           { is_expected.to be_a(String) }
-      its([:meta, :version])       { is_expected.to eq(1) }
-      its([:payload, :repository]) { is_expected.to eq(repo_name) }
+    it "uses the cid from the event that triggered the build" do
+      expect(subject[:meta][:cid]).to eq(build_requested_event[:meta][:cid])
     end
+
   end
 
   describe "#after_build" do
     subject { builder.after_build }
 
-    let(:exchange) { $rabbitmq_channel.topic("builds", durable: true) }
-    let(:queue)    { $rabbitmq_channel.queue("b_service") }
-
-    before :each do
-      queue.bind(exchange, routing_key: "build:finished")
+    let(:deploy_location) do
+      {
+        host:   "s3",
+        bucket: ENV["S3_BUCKET_NAME"],
+        object: "#{repo_name}/#{Time.now.to_i}"
+      }
     end
 
     it "publishes a 'build:finished' event" do
-      expect { subject }.to change { queue.message_count }.by(1)
+      expect { subject }.to emit("build:finished").with(
+        repository: repo_name,
+        location:   deploy_location
+      )
     end
 
-    describe "the event payload" do
-      subject { JSON.parse(queue.pop.last).with_indifferent_access }
-
-      let(:deploy_location) do
-        {
-          host:   "s3",
-          bucket: ENV["S3_BUCKET_NAME"],
-          object: "#{repo_name}/#{Time.now.to_i}"
-        }.with_indifferent_access
-      end
-
-      before :each do
-        builder.after_build
-      end
-
-      its([:name])                 { is_expected.to eq("build:finished") }
-      its([:id])                   { is_expected.to be_a(String) }
-      its([:meta, :created_at])    { is_expected.to eq(Time.now.iso8601(9)) }
-      its([:meta, :cid])           { is_expected.to be_a(String) }
-      its([:meta, :version])       { is_expected.to eq(1) }
-      its([:payload, :repository]) { is_expected.to eq(repo_name) }
-      its([:payload, :location])   { is_expected.to eq(deploy_location) }
+    it "uses the cid from the event that triggered the build" do
+      expect(subject[:meta][:cid]).to eq(build_requested_event[:meta][:cid])
     end
   end
 end
