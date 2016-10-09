@@ -1,7 +1,8 @@
 describe Workers::Builder do
-  let(:builder)   { described_class.new(repo) }
-  let(:repo)      { instance_double("Models::GitRepository").as_null_object }
-  let(:repo_name) { "octocat/Hello-World" }
+  let(:builder)               { described_class.new(repo, build_requested_event) }
+  let(:repo)                  { instance_double("Models::GitRepository").as_null_object }
+  let(:repo_name)             { "octocat/Hello-World" }
+  let(:build_requested_event) { { meta: { cid: SecureRandom.hex } } }
 
   before :all do
     Timecop.freeze
@@ -88,6 +89,11 @@ describe Workers::Builder do
         repository: repo_name
       )
     end
+
+    it "uses the cid from the event that triggered the build" do
+      expect(subject[:meta][:cid]).to eq(build_requested_event[:meta][:cid])
+    end
+
   end
 
   describe "#after_build" do
@@ -106,6 +112,10 @@ describe Workers::Builder do
         repository: repo_name,
         location:   deploy_location
       )
+    end
+
+    it "uses the cid from the event that triggered the build" do
+      expect(subject[:meta][:cid]).to eq(build_requested_event[:meta][:cid])
     end
   end
 end

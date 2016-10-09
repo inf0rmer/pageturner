@@ -1,8 +1,9 @@
 module Workers
   class Builder
 
-    def initialize(repo)
-      @repo = repo
+    def initialize(repo, event)
+      @repo  = repo
+      @event = event
     end
 
     def build!
@@ -24,14 +25,14 @@ module Workers
     def before_build
       Hivent::Signal.new("build:started").emit({
         repository: @repo.name
-      }, version: 1)
+      }, version: 1, cid: @event[:meta][:cid])
     end
 
     def after_build
       Hivent::Signal.new("build:finished").emit({
         repository: @repo.name,
         location:   deploy_location
-      }, version: 1)
+      }, version: 1, cid: @event[:meta][:cid])
     end
 
     private
