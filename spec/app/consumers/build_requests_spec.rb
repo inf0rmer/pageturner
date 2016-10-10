@@ -1,3 +1,5 @@
+require "app/consumers/build_requests"
+
 describe Consumers::BuildRequests do
 
   subject { described_class.new }
@@ -13,21 +15,17 @@ describe Consumers::BuildRequests do
 
     context "when a 'build:finished' event is triggered" do
 
-      let(:repository_double) { double(Models::GitRepository) }
-      let(:builder_double)    { double(Workers::Builder) }
+      let(:builder_double) { double(Workers::Builder) }
       let(:payload) do
         {
-          repository: "inf0rmer/inf0rmer.github.io"
+          repository: "inf0rmer/inf0rmer.github.io",
+          source: "github"
         }
       end
 
       before :each do
-        allow(Models::GitRepository).to receive(:new)
-          .with("inf0rmer/inf0rmer.github.io")
-          .and_return(repository_double)
-
         allow(Workers::Builder).to receive(:new)
-          .with(repository_double)
+          .with(hash_including(payload: payload))
           .and_return(builder_double)
 
         allow(builder_double).to receive(:build!)
