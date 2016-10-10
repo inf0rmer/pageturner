@@ -12,7 +12,7 @@ RUN mkdir -p /home/app/builder
 WORKDIR /tmp
 ADD Gemfile /tmp/
 ADD Gemfile.lock /tmp/
-RUN bundle install
+RUN bundle install --without development test
 
 # Add our app
 ADD . /home/app/builder
@@ -23,4 +23,4 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /home/app/builder
 
-CMD ["bundle", "exec", "foreman", "start", "-m", "hivent=4"]
+ENTRYPOINT ["bundle", "exec", "foreman", "start", "-m", "hivent=1"]
