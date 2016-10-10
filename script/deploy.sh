@@ -15,7 +15,7 @@ builders=("jekyll")
 
 for builder in $builders
 do
-  repo = pageturner/$builder-builder
+  repo="pageturner/$builder-builder"
 
   docker build -f images/$builder/Dockerfile -t $repo:$TRAVIS_COMMIT images/$builder/
   docker tag $repo:$TRAVIS_COMMIT $repo:$TAG
