@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 module Workers
+
   class Builder
 
     # 10 minutes max build time
@@ -20,17 +22,17 @@ module Workers
 
     def before_build
       Hivent::Signal.new("build:started").emit({
-        repository: repository_name
-      }, version: 1, cid: @event[:meta][:cid])
+                                                 repository: repository_name
+                                               }, version: 1, cid: @event[:meta][:cid])
     end
 
     def after_build
       delete_container!
 
       Hivent::Signal.new("build:finished").emit({
-        repository: repository_name,
-        location:   deploy_location
-      }, version: 1, cid: @event[:meta][:cid])
+                                                  repository: repository_name,
+                                                  location:   deploy_location
+                                                }, version: 1, cid: @event[:meta][:cid])
     end
 
     def container
@@ -40,13 +42,12 @@ module Workers
     def run_container!
       container
         .run(nil,
-          Env: [
-            "AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}",
-            "AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}",
-            "REPOSITORY_TARBALL_URL=#{tarball_url}",
-            "BUCKET_PATH=#{s3_bucket_path}"
-          ]
-        )
+             Env: [
+               "AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}",
+               "AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}",
+               "REPOSITORY_TARBALL_URL=#{tarball_url}",
+               "BUCKET_PATH=#{s3_bucket_path}"
+             ])
         .wait(BUILD_TIMEOUT)
     end
 
@@ -82,5 +83,7 @@ module Workers
         object: "#{repository_name}/#{Time.now.to_i}"
       }
     end
+
   end
+
 end

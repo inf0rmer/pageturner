@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "app/consumers/build_requests"
 
 describe Consumers::BuildRequests do

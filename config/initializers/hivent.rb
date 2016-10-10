@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "app/support/life_cycle_event_handler"
 
 Hivent.configure do |config|

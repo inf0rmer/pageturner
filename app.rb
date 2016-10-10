@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative "./boot"
 
 Dir[APP_ROOT / "config" / "initializers" / "**" / "*.rb"].each { |f| require f }
