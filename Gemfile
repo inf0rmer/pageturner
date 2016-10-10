@@ -11,9 +11,8 @@ gem "dotenv"
 gem "rollbar"
 
 # App specifics
-gem "git"
-gem "s3_uploader"
 gem "hivent"
+gem "docker-api"
 
 # Deployment
 gem "foreman"

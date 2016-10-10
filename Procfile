@@ -1,1 +1,1 @@
-hivent: bundle exec hivent start -r app.rb
+hivent: bundle exec hivent start -r ./app.rb

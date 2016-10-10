@@ -5,16 +5,29 @@ services:
     build: .
     links:
       - hivent
+      - dockerproxy
     environment:
       APP_ENV:
       MONITORED_BRANCH:
       ROLLBAR_ACCESS_TOKEN:
       S3_BUCKET_NAME:
       AWS_ACCESS_KEY_ID:
-      AWS_SECRET_KEY:
+      AWS_SECRET_ACCESS_KEY:
       AWS_REGION:
       HIVENT_URL: redis://hivent:6379
       HIVENT_PARTITION_COUNT: 4
+      DOCKER_URL: tcp://dockerproxy:2375
 
   hivent:
     image: redis:3.2
+    ports:
+      - 6379
+
+  dockerproxy:
+    image: shipyard/docker-proxy
+    ports:
+      - 2375
+    environment:
+      PORT: 2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

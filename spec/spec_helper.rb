@@ -11,5 +11,3 @@ require_relative "../boot"
 require "hivent/rspec"
 
 Dir[APP_ROOT / "spec" / "support" / "**" / "*.rb"].each { |f| require f }
-
-require "app"
