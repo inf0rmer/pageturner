@@ -1,6 +1,9 @@
 module Workers
   class Builder
 
+    # 10 minutes max build time
+    BUILD_TIMEOUT = 10 * 60
+
     def initialize(event)
       @event = event
     end
@@ -35,14 +38,16 @@ module Workers
     end
 
     def run_container!
-      container.run(nil,
-        Env: [
-          "AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}",
-          "AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}",
-          "REPOSITORY_TARBALL_URL=#{tarball_url}",
-          "BUCKET_PATH=#{s3_bucket_path}"
-        ]
-      )
+      container
+        .run(nil,
+          Env: [
+            "AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}",
+            "AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}",
+            "REPOSITORY_TARBALL_URL=#{tarball_url}",
+            "BUCKET_PATH=#{s3_bucket_path}"
+          ]
+        )
+        .wait(BUILD_TIMEOUT)
     end
 
     def delete_container!

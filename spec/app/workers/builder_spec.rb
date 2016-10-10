@@ -1,9 +1,10 @@
 require "app/workers/builder"
 
 describe Workers::Builder do
-  let(:builder)      { described_class.new(build_requested_event) }
-  let(:repo_name)    { "octocat/Hello-World" }
-  let(:docker_image) { double(Docker::Image) }
+  let(:builder)          { described_class.new(build_requested_event) }
+  let(:repo_name)        { "octocat/Hello-World" }
+  let(:docker_image)     { double(Docker::Image) }
+  let(:docker_container) { double(Docker::Container) }
   let(:build_requested_event) do
     {
       payload: {
@@ -45,7 +46,8 @@ describe Workers::Builder do
         .with(fromImage: "pageturner/jekyll-builder")
         .and_return(docker_image)
 
-      allow(docker_image).to receive(:run)
+      allow(docker_image).to receive(:run).and_return(docker_container)
+      allow(docker_container).to receive(:wait)
       allow(docker_image).to receive(:remove)
     end
 
@@ -68,6 +70,9 @@ describe Workers::Builder do
 
       expect(docker_image).to have_received(:run)
         .with(nil, hash_including(Env: environment))
+
+      expect(docker_container).to have_received(:wait)
+        .with(described_class::BUILD_TIMEOUT)
     end
 
     context "after building" do
