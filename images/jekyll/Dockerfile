@@ -12,5 +12,6 @@ ADD ./build.sh /usr/local/bin/build
 RUN mkdir -p /data/repository
 RUN mkdir -p /data/build
 RUN chmod 777 /data/build
+RUN chmod 777 /data/repository
 
 CMD ["build"]
