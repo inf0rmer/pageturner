@@ -6,4 +6,4 @@ Dockerfile
 Guardfile
 LICENSE
 README.md
-script/
+script/deploy.sh

@@ -15,7 +15,7 @@ services:
       AWS_SECRET_ACCESS_KEY:
       AWS_REGION:
       HIVENT_URL: redis://hivent:6379
-      HIVENT_PARTITION_COUNT: 1
+      HIVENT_PARTITION_COUNT: 4
       DOCKER_URL: tcp://dockerproxy:2375
 
   hivent:

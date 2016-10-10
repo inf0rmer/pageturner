@@ -8,6 +8,9 @@ RUN adduser --disabled-password --gecos "" app
 # Prepare folders
 RUN mkdir -p /home/app/builder
 
+# Add entrypoint script
+ADD ./script/entrypoint.sh /usr/local/bin/entrypoint
+
 # Run Bundle in a cache efficient way
 WORKDIR /tmp
 ADD Gemfile /tmp/
@@ -23,4 +26,4 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /home/app/builder
 
-ENTRYPOINT ["bundle", "exec", "foreman", "start", "-m", "hivent=1"]
+ENTRYPOINT ["entrypoint"]
