@@ -37,7 +37,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    hivent (1.0.3)
+    hivent (1.0.4)
       activesupport (~> 5.0)
       event_emitter (~> 0.2)
       redis (~> 3.3)
