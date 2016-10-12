@@ -4,7 +4,6 @@ require "app/workers/builder"
 describe Workers::Builder do
   let(:builder)          { described_class.new(build_requested_event) }
   let(:repo_name)        { "octocat/Hello-World" }
-  let(:docker_image)     { double(Docker::Image) }
   let(:docker_container) { double(Docker::Container) }
   let(:build_requested_event) do
     {
@@ -43,13 +42,10 @@ describe Workers::Builder do
     end
 
     before :each do
-      allow(Docker::Image).to receive(:create)
-        .with(fromImage: "pageturner/jekyll-builder")
-        .and_return(docker_image)
-
-      allow(docker_image).to receive(:run).and_return(docker_container)
-      allow(docker_container).to receive(:wait)
-      allow(docker_image).to receive(:remove)
+      allow(Docker::Container).to receive(:create).and_return(docker_container)
+      allow(docker_container).to receive(:start).and_return(docker_container)
+      allow(docker_container).to receive(:wait).and_return(docker_container)
+      allow(docker_container).to receive(:delete)
     end
 
     context "before building" do
@@ -67,13 +63,19 @@ describe Workers::Builder do
     end
 
     it "builds the project inside an ephemeral container, passing its environment configuration" do
-      subject
+      expect(Docker::Container).to receive(:create)
+        .with(hash_including(
+          Image: "pageturner/jekyll-builder:latest",
+          Env: environment
+        ))
 
-      expect(docker_image).to have_received(:run)
-        .with(nil, hash_including(Env: environment))
+      expect(docker_container).to receive(:start).ordered
 
-      expect(docker_container).to have_received(:wait)
+      expect(docker_container).to receive(:wait)
         .with(described_class::BUILD_TIMEOUT)
+        .ordered
+
+      subject
     end
 
     context "after building" do
@@ -88,7 +90,7 @@ describe Workers::Builder do
       it "deletes the docker image used to build the project" do
         subject
 
-        expect(docker_image).to have_received(:remove)
+        expect(docker_container).to have_received(:delete)
       end
 
       describe "the 'build:finished' event" do

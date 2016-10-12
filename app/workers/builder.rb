@@ -36,23 +36,25 @@ module Workers
     end
 
     def container
-      @container ||= Docker::Image.create(fromImage: "pageturner/jekyll-builder")
+      @container ||= Docker::Container.create(
+        Image: "pageturner/jekyll-builder:latest",
+        Env: [
+          "AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}",
+          "AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}",
+          "REPOSITORY_TARBALL_URL=#{tarball_url}",
+          "BUCKET_PATH=#{s3_bucket_path}"
+        ]
+      )
     end
 
     def run_container!
       container
-        .run(nil,
-             Env: [
-               "AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}",
-               "AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}",
-               "REPOSITORY_TARBALL_URL=#{tarball_url}",
-               "BUCKET_PATH=#{s3_bucket_path}"
-             ])
+        .start
         .wait(BUILD_TIMEOUT)
     end
 
     def delete_container!
-      container.remove
+      container.delete
     end
 
     def tarball_url
