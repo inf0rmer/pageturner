@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 curl -L $REPOSITORY_TARBALL_URL > /data/repository.tgz
 
-tar -xzf /data/repository.tgz -C /data/repository --strip-components=1
+tar -xzf /data/repository.tgz -C /srv/jekyll --strip-components=1
 
-cd /data/repository
+cd /srv/jekyll
 
-bundle install && bundle exec jekyll build --source /data/repository --destination /data/build && aws s3 sync /data/build $BUCKET_PATH
+chown -R jekyll /srv/jekyll
+
+bundle install && sudo -u jekyll jekyll build --source /srv/jekyll && aws s3 sync /srv/jekyll $BUCKET_PATH
