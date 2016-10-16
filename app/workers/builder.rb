@@ -58,7 +58,7 @@ module Workers
     end
 
     def tarball_url
-      "https://github.com/#{repository_name}/tarball/#{ENV['MONITORED_BRANCH']}"
+      "https://github.com/#{repository_name}/tarball/#{branch}"
     end
 
     def s3_bucket_path
@@ -67,6 +67,10 @@ module Workers
 
     def repository_name
       @event[:payload][:repository]
+    end
+
+    def branch
+      @event[:payload][:branch]
     end
 
     def build_options

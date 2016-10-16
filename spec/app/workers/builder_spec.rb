@@ -4,11 +4,13 @@ require "app/workers/builder"
 describe Workers::Builder do
   let(:builder)          { described_class.new(build_requested_event) }
   let(:repo_name)        { "octocat/Hello-World" }
+  let(:branch)           { "master" }
   let(:docker_container) { double(Docker::Container) }
   let(:build_requested_event) do
     {
       payload: {
         repository: repo_name,
+        branch:     branch,
         source:     "github"
       },
       meta: { cid: SecureRandom.hex }
@@ -27,7 +29,7 @@ describe Workers::Builder do
     subject { builder.build! }
 
     let(:project_tarball_url) do
-      "https://github.com/#{repo_name}/tarball/#{ENV['MONITORED_BRANCH']}"
+      "https://github.com/#{repo_name}/tarball/#{branch}"
     end
     let(:s3_bucket_path) do
       "s3://#{ENV['S3_BUCKET_NAME']}/#{repo_name}/#{Time.now.to_i}"
