@@ -7,4 +7,4 @@ cd /srv/jekyll
 
 chown -R jekyll /srv/jekyll
 
-bundle install && sudo -u jekyll jekyll build --source /srv/jekyll && aws s3 sync /srv/jekyll $BUCKET_PATH
+bundle install && sudo -u jekyll jekyll build --source /srv/jekyll && aws s3 sync /srv/jekyll/_site $BUCKET_PATH
